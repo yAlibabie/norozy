@@ -30,13 +30,9 @@ public class Database {
         entities.remove(entity);
     }
 
-    public static Entity update (Entity e) throws EntityNotFoundException {
-        for (Entity entity : entities) {
-            if (entity.getId() == e.id) {
-                entity = e;
-                return entity;
-            }
-        }
-        throw new EntityNotFoundException(e.id);
+    public static void update (Entity e) throws EntityNotFoundException {
+        Entity entity = get(e.id);
+        int index = entities.indexOf(entity);
+        entities.set(index , e);
     }
 }
