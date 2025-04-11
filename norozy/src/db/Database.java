@@ -1,6 +1,7 @@
 package db;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import db.exeption.EntityNotFoundException;
@@ -10,7 +11,7 @@ import db.exeption.InvalidEntityException;
 public class Database {
 
     private static ArrayList<Entity> entities = new ArrayList<>();
-    private static int nextId = 1;
+   // private static int nextId = 1;
     public static HashMap<Integer , Validator> validators = new HashMap<>();
 
     private Database () {}
@@ -20,7 +21,15 @@ public class Database {
         if(validator != null) {
             validator.validate(e);
         }
-        e.setId(nextId++);
+
+        if (e instanceof Trackable) {
+            Trackable track = (Trackable) e;
+            Date now = new Date();
+            track.setCreationDate(now);
+            track.setLastModificationDate(now);
+        }
+
+        e.id = entities.size() + 1;
         entities.add(e.copy());
     }
 
@@ -38,10 +47,33 @@ public class Database {
         entities.remove(entity);
     }
 
-    public static void update (Entity e) throws EntityNotFoundException {
-        Entity entity = get(e.id);
-        int index = entities.indexOf(entity);
-        entities.set(index , e.copy());
+    public static void update (Entity e) throws EntityNotFoundException , InvalidEntityException {
+        Validator validator = validators.get(e.getEntityCode());
+        if (validator != null) {
+            validator.validate(e);
+        }
+
+        if(e instanceof Trackable) {
+            Trackable track = (Trackable) e;
+            Date now = new Date();
+            track.setLastModificationDate(now);
+        }
+
+        Entity entity = null;
+        int index = -1;
+
+        for(int i = 0; i < entities.size(); i++) {
+            if(entities.get(i).id == e.id) {
+                entity = entities.get(i);
+                index = i;
+                break;
+            }
+        }
+        if(entity == null) {
+            throw new EntityNotFoundException(e.id);
+        }
+
+        entities.set(index,e.copy());
     }
 
     public static void registerValidator(int entityCode, Validator validator) {
