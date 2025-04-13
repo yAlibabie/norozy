@@ -8,7 +8,7 @@ public class Document extends Entity implements Trackable {
     public String content;
     public Date creationDate ;
     public Date lastModificationDate;
-    public static final int DOCUMENT_ENTITY_CODE = 1;
+    public static final int DOCUMENT_ENTITY_CODE = 10;
 
 
     public Document (String content) {
