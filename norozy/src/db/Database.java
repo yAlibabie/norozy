@@ -11,12 +11,13 @@ import db.exeption.InvalidEntityException;
 public class Database {
 
     private static ArrayList<Entity> entities = new ArrayList<>();
-   // private static int nextId = 1;
+    private static int nextId = 1;
     public static HashMap<Integer , Validator> validators = new HashMap<>();
 
     private Database () {}
 
     public static void add(Entity e) throws InvalidEntityException {
+
         Validator validator = validators.get(e.getEntityCode());
         if(validator != null) {
             validator.validate(e);
@@ -29,7 +30,13 @@ public class Database {
             track.setLastModificationDate(now);
         }
 
-        e.id = entities.size() + 1;
+        for(Entity entity : entities) {
+            if(entity.id == nextId) {
+                e.id = nextId + 1 + 1;
+            } else {
+                e.id = nextId + 1;
+            }
+        }
         entities.add(e.copy());
     }
 
@@ -81,5 +88,15 @@ public class Database {
             throw new IllegalArgumentException("Validator for this entity code already exists");
         }
         validators.put(entityCode , validator);
+    }
+
+    public static ArrayList<Entity> getAll (int entityCode) {
+        ArrayList<Entity> result = new ArrayList<>();
+        for(Entity entity : entities) {
+            if(entity.getEntityCode() == entityCode) {
+                result.add(entity.copy());
+            }
+        }
+        return result;
     }
 }
