@@ -130,7 +130,7 @@ public class TaskService {
 
     public static List <Step> getStepsForTask (int taskId) {
         List <Step> steps = new ArrayList<>();
-        for(Entity entity : Database.getAll(11)) {
+        for(Entity entity : Database.getAll(12)) {
             Step newstep = (Step) entity;
             if(newstep.getTaskRef() == taskId) {
                 steps.add(newstep);
