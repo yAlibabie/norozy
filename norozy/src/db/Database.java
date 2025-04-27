@@ -11,7 +11,7 @@ import db.exeption.InvalidEntityException;
 public class Database {
 
     private static ArrayList<Entity> entities = new ArrayList<>();
-    private static int nextId = 1;
+    private static int nextId = 0;
     public static HashMap<Integer , Validator> validators = new HashMap<>();
 
     private Database () {}
@@ -30,12 +30,8 @@ public class Database {
             track.setLastModificationDate(now);
         }
 
-        for(Entity entity : entities) {
-            if(entity.id == nextId) {
-                e.id = nextId + 1 + 1;
-            } else {
-                e.id = nextId + 1;
-            }
+        e.id = nextId + 1;
+        
         }
         entities.add(e.copy());
     }
