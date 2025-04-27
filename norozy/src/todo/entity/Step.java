@@ -6,6 +6,7 @@ public class Step extends Entity {
 
     public enum Status {NOT_STARTED,COMPLETED};
 
+    public static final int STEP_ENTITY_CODE = 12;
     private String title;
     private  Status status;
     private int taskRef;
@@ -18,7 +19,7 @@ public class Step extends Entity {
 
     @Override
     public int getEntityCode() {
-        return 0;
+        return STEP_ENTITY_CODE;
     }
 
     @Override
